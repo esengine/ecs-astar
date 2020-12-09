@@ -25,10 +25,9 @@ var ai;
     var AStarPathfinder = (function () {
         function AStarPathfinder() {
         }
-        AStarPathfinder.search = function (graph, start, goal) {
-            var _this = this;
+        AStarPathfinder.search = function (graph, start, goal, cameFrom) {
+            if (cameFrom === void 0) { cameFrom = new Map(); }
             var foundPath = false;
-            var cameFrom = new Map();
             cameFrom.set(start, start);
             var costSoFar = new Map();
             var frontier = new ai.PriorityQueue(1000);
@@ -36,17 +35,13 @@ var ai;
             costSoFar.set(start, 0);
             var _loop_1 = function () {
                 var current = frontier.dequeue();
-                if (current.data instanceof es.Vector2 && goal instanceof es.Vector2 && current.data.equals(goal)) {
-                    foundPath = true;
-                    return "break";
-                }
-                else if (current.data == goal) {
+                if (current.data["equals"](goal)) {
                     foundPath = true;
                     return "break";
                 }
                 graph.getNeighbors(current.data).forEach(function (next) {
                     var newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!_this.hasKey(costSoFar, next) || newCost < costSoFar.get(next)) {
+                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
                         costSoFar.set(next, newCost);
                         var priority = newCost + graph.heuristic(next, goal);
                         frontier.enqueue(new AStarNode(next), priority);
@@ -59,42 +54,18 @@ var ai;
                 if (state_1 === "break")
                     break;
             }
-            return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
+            return foundPath;
         };
         AStarPathfinder.recontructPath = function (cameFrom, start, goal) {
             var path = [];
             var current = goal;
             path.push(goal);
-            while (current != start) {
-                current = this.getKey(cameFrom, current);
+            while (!current["equals"](start)) {
+                current = cameFrom.get(current);
                 path.push(current);
             }
             path.reverse();
             return path;
-        };
-        AStarPathfinder.hasKey = function (map, compareKey) {
-            var iterator = map.keys();
-            var r;
-            while (r = iterator.next(), !r.done) {
-                if (r.value instanceof es.Vector2 && compareKey instanceof es.Vector2 && r.value.equals(compareKey))
-                    return true;
-                else if (r.value == compareKey)
-                    return true;
-            }
-            return false;
-        };
-        AStarPathfinder.getKey = function (map, compareKey) {
-            var iterator = map.keys();
-            var valueIterator = map.values();
-            var r;
-            var v;
-            while (r = iterator.next(), v = valueIterator.next(), !r.done) {
-                if (r.value instanceof es.Vector2 && compareKey instanceof es.Vector2 && r.value.equals(compareKey))
-                    return v.value;
-                else if (r.value == compareKey)
-                    return v.value;
-            }
-            return null;
         };
         return AStarPathfinder;
     }());
@@ -308,21 +279,20 @@ var ai;
     var BreadthFirstPathfinder = (function () {
         function BreadthFirstPathfinder() {
         }
-        BreadthFirstPathfinder.search = function (graph, start, goal) {
-            var _this = this;
+        BreadthFirstPathfinder.search = function (graph, start, goal, cameFrom) {
+            if (cameFrom === void 0) { cameFrom = new Map(); }
             var foundPath = false;
             var frontier = [];
             frontier.unshift(start);
-            var cameFrom = new Map();
             cameFrom.set(start, start);
             var _loop_2 = function () {
                 var current = frontier.shift();
-                if (JSON.stringify(current) == JSON.stringify(goal)) {
+                if (current.equals(goal)) {
                     foundPath = true;
                     return "break";
                 }
                 graph.getNeighbors(current).forEach(function (next) {
-                    if (!_this.hasKey(cameFrom, next)) {
+                    if (!cameFrom.has(next)) {
                         frontier.unshift(next);
                         cameFrom.set(next, current);
                     }
@@ -333,16 +303,12 @@ var ai;
                 if (state_2 === "break")
                     break;
             }
-            return foundPath ? ai.AStarPathfinder.recontructPath(cameFrom, start, goal) : null;
+            return foundPath;
         };
-        BreadthFirstPathfinder.hasKey = function (map, compareKey) {
-            var iterator = map.keys();
-            var r;
-            while (r = iterator.next(), !r.done) {
-                if (JSON.stringify(r.value) == JSON.stringify(compareKey))
-                    return true;
-            }
-            return false;
+        BreadthFirstPathfinder.searchR = function (graph, start, goal) {
+            var cameFrom = new Map();
+            var foundPath = this.search(graph, start, goal, cameFrom);
+            return foundPath ? ai.AStarPathfinder.recontructPath(cameFrom, start, goal) : null;
         };
         return BreadthFirstPathfinder;
     }());
@@ -393,7 +359,7 @@ var ai;
             return this._neighbors;
         };
         UnweightedGridGraph.prototype.search = function (start, goal) {
-            return ai.BreadthFirstPathfinder.search(this, start, goal);
+            return ai.BreadthFirstPathfinder.searchR(this, start, goal);
         };
         UnweightedGridGraph.CARDINAL_DIRS = [
             new es.Vector2(1, 0),
@@ -486,10 +452,9 @@ var ai;
     var WeightedPathfinder = (function () {
         function WeightedPathfinder() {
         }
-        WeightedPathfinder.search = function (graph, start, goal) {
-            var _this = this;
+        WeightedPathfinder.search = function (graph, start, goal, cameFrom) {
+            if (cameFrom === void 0) { cameFrom = new Map(); }
             var foundPath = false;
-            var cameFrom = new Map();
             cameFrom.set(start, start);
             var costSoFar = new Map();
             var frontier = new ai.PriorityQueue(1000);
@@ -497,13 +462,13 @@ var ai;
             costSoFar.set(start, 0);
             var _loop_3 = function () {
                 var current = frontier.dequeue();
-                if (JSON.stringify(current.data) == JSON.stringify(goal)) {
+                if (current.data["equals"](goal)) {
                     foundPath = true;
                     return "break";
                 }
                 graph.getNeighbors(current.data).forEach(function (next) {
                     var newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!_this.hasKey(costSoFar, next) || newCost < costSoFar.get(next)) {
+                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
                         costSoFar.set(next, newCost);
                         var priprity = newCost;
                         frontier.enqueue(new WeightedNode(next), priprity);
@@ -516,38 +481,18 @@ var ai;
                 if (state_3 === "break")
                     break;
             }
-            return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
+            return foundPath;
         };
         WeightedPathfinder.recontructPath = function (cameFrom, start, goal) {
             var path = [];
             var current = goal;
             path.push(goal);
-            while (current != start) {
-                current = this.getKey(cameFrom, current);
+            while (!current["equals"](start)) {
+                current = cameFrom.get(current);
                 path.push(current);
             }
             path.reverse();
             return path;
-        };
-        WeightedPathfinder.hasKey = function (map, compareKey) {
-            var iterator = map.keys();
-            var r;
-            while (r = iterator.next(), !r.done) {
-                if (JSON.stringify(r.value) == JSON.stringify(compareKey))
-                    return true;
-            }
-            return false;
-        };
-        WeightedPathfinder.getKey = function (map, compareKey) {
-            var iterator = map.keys();
-            var valueIterator = map.values();
-            var r;
-            var v;
-            while (r = iterator.next(), v = valueIterator.next(), !r.done) {
-                if (JSON.stringify(r.value) == JSON.stringify(compareKey))
-                    return v.value;
-            }
-            return null;
         };
         return WeightedPathfinder;
     }());

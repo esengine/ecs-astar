@@ -7,10 +7,8 @@ declare module ai {
 }
 declare module ai {
     class AStarPathfinder {
-        static search<T>(graph: IAstarGraph<T>, start: T, goal: T): T[];
+        static search<T>(graph: IAstarGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
         static recontructPath<T>(cameFrom: Map<T, T>, start: T, goal: T): T[];
-        private static hasKey;
-        private static getKey;
     }
 }
 declare module ai {
@@ -26,7 +24,7 @@ declare module ai {
         constructor(width: number, height: number);
         isNodeInBounds(node: es.Vector2): boolean;
         isNodePassable(node: es.Vector2): boolean;
-        search(start: es.Vector2, goal: es.Vector2): es.Vector2[];
+        search(start: es.Vector2, goal: es.Vector2): boolean;
         getNeighbors(node: es.Vector2): es.Vector2[];
         cost(from: es.Vector2, to: es.Vector2): number;
         heuristic(node: es.Vector2, goal: es.Vector2): number;
@@ -62,8 +60,8 @@ declare module ai {
 }
 declare module ai {
     class BreadthFirstPathfinder {
-        static search<T>(graph: IUnweightedGraph<T>, start: T, goal: T): T[];
-        private static hasKey;
+        static search<T>(graph: IUnweightedGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
+        static searchR<T>(graph: IUnweightedGraph<T>, start: T, goal: T): T[];
     }
 }
 declare module ai {
@@ -115,7 +113,7 @@ declare module ai {
         constructor(width: number, height: number, allowDiagonalSearch?: boolean);
         isNodeInBounds(node: es.Vector2): boolean;
         isNodePassable(node: es.Vector2): boolean;
-        search(start: es.Vector2, goal: es.Vector2): es.Vector2[];
+        search(start: es.Vector2, goal: es.Vector2): boolean;
         getNeighbors(node: es.Vector2): es.Vector2[];
         cost(from: es.Vector2, to: es.Vector2): number;
     }
@@ -126,10 +124,8 @@ declare module ai {
         constructor(data: T);
     }
     class WeightedPathfinder {
-        static search<T>(graph: IWeightedGraph<T>, start: T, goal: T): T[];
+        static search<T>(graph: IWeightedGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
         static recontructPath<T>(cameFrom: Map<T, T>, start: T, goal: T): T[];
-        private static hasKey;
-        private static getKey;
     }
 }
 declare module ai {

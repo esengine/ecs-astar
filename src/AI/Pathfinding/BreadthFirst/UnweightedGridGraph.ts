@@ -56,7 +56,7 @@ module ai {
         }
 
         public search(start: es.Vector2, goal: es.Vector2): es.Vector2[] {
-            return BreadthFirstPathfinder.search(this, start, goal);
+            return BreadthFirstPathfinder.searchR(this, start, goal);
         }
     }
 }

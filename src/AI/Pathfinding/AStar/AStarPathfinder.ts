@@ -10,9 +10,8 @@ module ai {
          * @param start
          * @param goal
          */
-        public static search<T>(graph: IAstarGraph<T>, start: T, goal: T) {
+        public static search<T>(graph: IAstarGraph<T>, start: T, goal: T, cameFrom: Map<T, T> = new Map<T, T>()) {
             let foundPath = false;
-            let cameFrom = new Map<T, T>();
             cameFrom.set(start, start);
 
             let costSoFar = new Map<T, number>();
@@ -24,17 +23,14 @@ module ai {
             while (frontier.count > 0) {
                 let current = frontier.dequeue();
 
-                if (current.data instanceof es.Vector2 && goal instanceof es.Vector2 && current.data.equals(goal)) {
-                    foundPath = true;
-                    break;
-                } else if (current.data == goal){
+                if (current.data["equals"](goal)) {
                     foundPath = true;
                     break;
                 }
 
                 graph.getNeighbors(current.data).forEach(next => {
                     let newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!this.hasKey(costSoFar, next) || newCost < costSoFar.get(next)) {
+                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
                         costSoFar.set(next, newCost);
                         let priority = newCost + graph.heuristic(next, goal);
                         frontier.enqueue(new AStarNode<T>(next), priority);
@@ -42,6 +38,19 @@ module ai {
                     }
                 });
             }
+
+            return foundPath;
+        }
+
+        /**
+         * 获取从起点到目标的路径。如果没有找到路径，则返回null。
+         * @param graph 
+         * @param start 
+         * @param goal 
+         */
+        public static searchR<T>(graph: IAstarGraph<T>, start: T, goal: T) {
+            let cameFrom: Map<T, T> = new Map<T, T>();
+            let foundPath = this.search(graph, start, goal, cameFrom);
 
             return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
         }
@@ -57,42 +66,14 @@ module ai {
             let current = goal;
             path.push(goal);
 
-            while (current != start) {
-                current = this.getKey(cameFrom, current);
+            while (!current["equals"](start)) {
+                current = cameFrom.get(current);
                 path.push(current);
             }
 
             path.reverse();
 
             return path;
-        }
-
-        private static hasKey<T>(map: Map<T, number>, compareKey: T) {
-            let iterator = map.keys();
-            let r: IteratorResult<T>;
-            while (r = iterator.next() , !r.done) {
-                if (r.value instanceof es.Vector2 && compareKey instanceof es.Vector2 && r.value.equals(compareKey))
-                    return true;
-                else if (r.value == compareKey)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static getKey<T>(map: Map<T, T>, compareKey: T) {
-            let iterator = map.keys();
-            let valueIterator = map.values();
-            let r: IteratorResult<T>;
-            let v: IteratorResult<T>;
-            while (r = iterator.next(), v = valueIterator.next(), !r.done) {
-                if (r.value instanceof es.Vector2 && compareKey instanceof es.Vector2 && r.value.equals(compareKey))
-                    return v.value;
-                else if (r.value == compareKey)
-                    return v.value;
-            }
-
-            return null;
         }
     }
 
