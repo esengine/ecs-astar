@@ -7,8 +7,9 @@ declare module ai {
 }
 declare module ai {
     class AStarPathfinder {
-        static search<T>(graph: IAstarGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
-        static recontructPath<T>(cameFrom: Map<T, T>, start: T, goal: T): T[];
+        static search<T extends es.Vector2>(graph: IAstarGraph<T>, start: T, goal: T, cameFrom?: Map<string, T>): boolean;
+        static searchR<T extends es.Vector2>(graph: IAstarGraph<T>, start: T, goal: T): T[];
+        static recontructPath<T extends es.Vector2>(cameFrom: Map<string, T>, start: T, goal: T): T[];
     }
 }
 declare module ai {
@@ -60,8 +61,8 @@ declare module ai {
 }
 declare module ai {
     class BreadthFirstPathfinder {
-        static search<T>(graph: IUnweightedGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
-        static searchR<T>(graph: IUnweightedGraph<T>, start: T, goal: T): T[];
+        static search<T extends es.Vector2>(graph: IUnweightedGraph<T>, start: T, goal: T, cameFrom?: Map<string, T>): boolean;
+        static searchR<T extends es.Vector2>(graph: IUnweightedGraph<T>, start: T, goal: T): T[];
     }
 }
 declare module ai {
@@ -124,8 +125,9 @@ declare module ai {
         constructor(data: T);
     }
     class WeightedPathfinder {
-        static search<T>(graph: IWeightedGraph<T>, start: T, goal: T, cameFrom?: Map<T, T>): boolean;
-        static recontructPath<T>(cameFrom: Map<T, T>, start: T, goal: T): T[];
+        static search<T extends es.Vector2>(graph: IWeightedGraph<T>, start: T, goal: T, cameFrom?: Map<string, T>): boolean;
+        static searchR<T extends es.Vector2>(graph: IWeightedGraph<T>, start: T, goal: T): T[];
+        static recontructPath<T extends es.Vector2>(cameFrom: Map<string, T>, start: T, goal: T): T[];
     }
 }
 declare module ai {

@@ -9,32 +9,34 @@ module ai {
     }
 
     export class WeightedPathfinder {
-        public static search<T>(graph: IWeightedGraph<T>, start: T, goal: T, cameFrom: Map<T, T> = new Map<T, T>()) {
+        public static search<T extends es.Vector2>(graph: IWeightedGraph<T>, start: T, goal: T, cameFrom: Map<string, T> = new Map<string, T>()) {
             let foundPath = false;
 
-            cameFrom.set(start, start);
+            const startKey = `${start.x}_${start.y}`;
+            cameFrom.set(startKey, start);
 
-            let costSoFar = new Map<T, number>();
+            let costSoFar = new Map<string, number>();
             let frontier = new PriorityQueue<WeightedNode<T>>(1000);
             frontier.enqueue(new WeightedNode<T>(start), 0);
 
-            costSoFar.set(start, 0);
+            costSoFar.set(startKey, 0);
 
             while (frontier.count > 0) {
                 let current = frontier.dequeue();
 
-                if (current.data["equals"](goal)) {
+                if (current.data.equals(goal)) {
                     foundPath = true;
                     break;
                 }
 
                 graph.getNeighbors(current.data).forEach(next => {
-                    let newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
-                        costSoFar.set(next, newCost);
+                    let newCost = costSoFar.get(`${current.data.x}_${current.data.y}`) + graph.cost(current.data, next);
+                    const nextKey = `${next.x}_${next.y}`;
+                    if (!costSoFar.has(nextKey) || newCost < costSoFar.get(nextKey)) {
+                        costSoFar.set(nextKey, newCost);
                         let priprity = newCost;
                         frontier.enqueue(new WeightedNode<T>(next), priprity);
-                        cameFrom.set(next, current.data);
+                        cameFrom.set(`${next.x}_${next.y}`, current.data);
                     }
                 });
             }
@@ -48,8 +50,8 @@ module ai {
          * @param start 
          * @param goal 
          */
-        public static searchR<T>(graph: IWeightedGraph<T>, start: T, goal: T) {
-            let cameFrom: Map<T, T> = new Map<T, T>();
+        public static searchR<T extends es.Vector2>(graph: IWeightedGraph<T>, start: T, goal: T) {
+            let cameFrom: Map<string, T> = new Map<string, T>();
             let foundPath = this.search(graph, start, goal, cameFrom);
 
             return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
@@ -61,13 +63,13 @@ module ai {
          * @param start 
          * @param goal 
          */
-        public static recontructPath<T>(cameFrom: Map<T, T>, start: T, goal: T): T[] {
+        public static recontructPath<T extends es.Vector2>(cameFrom: Map<string, T>, start: T, goal: T): T[] {
             let path = [];
             let current = goal;
             path.push(goal);
 
-            while (!current["equals"](start)) {
-                current = cameFrom.get(current);
+            while (current && !current.equals(start)) {
+                current = cameFrom.get(`${current.x}_${current.y}`);
                 path.push(current);
             }
 

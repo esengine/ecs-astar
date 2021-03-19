@@ -38,7 +38,7 @@ module ai {
          * @param node
          */
         public isNodePassable(node: es.Vector2): boolean {
-            return !this.walls.firstOrDefault(wall => wall.equals(node));
+            return !new linq.List(this.walls).firstOrDefault(wall => wall.equals(node));
         }
 
         /**

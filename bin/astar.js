@@ -28,24 +28,26 @@ var ai;
         AStarPathfinder.search = function (graph, start, goal, cameFrom) {
             if (cameFrom === void 0) { cameFrom = new Map(); }
             var foundPath = false;
-            cameFrom.set(start, start);
+            var startKey = start.x + "_" + start.y;
+            cameFrom.set(startKey, start);
             var costSoFar = new Map();
             var frontier = new ai.PriorityQueue(1000);
             frontier.enqueue(new AStarNode(start), 0);
-            costSoFar.set(start, 0);
+            costSoFar.set(startKey, 0);
             var _loop_1 = function () {
                 var current = frontier.dequeue();
-                if (current.data["equals"](goal)) {
+                if (current.data.equals(goal)) {
                     foundPath = true;
                     return "break";
                 }
                 graph.getNeighbors(current.data).forEach(function (next) {
-                    var newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
-                        costSoFar.set(next, newCost);
+                    var newCost = costSoFar.get(current.data.x + "_" + current.data.y) + graph.cost(current.data, next);
+                    var nextKey = next.x + "_" + next.y;
+                    if (!costSoFar.has(nextKey) || newCost < costSoFar.get(nextKey)) {
+                        costSoFar.set(nextKey, newCost);
                         var priority = newCost + graph.heuristic(next, goal);
                         frontier.enqueue(new AStarNode(next), priority);
-                        cameFrom.set(next, current.data);
+                        cameFrom.set(next.x + "_" + next.y, current.data);
                     }
                 });
             };
@@ -56,12 +58,17 @@ var ai;
             }
             return foundPath;
         };
+        AStarPathfinder.searchR = function (graph, start, goal) {
+            var cameFrom = new Map();
+            var foundPath = this.search(graph, start, goal, cameFrom);
+            return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
+        };
         AStarPathfinder.recontructPath = function (cameFrom, start, goal) {
             var path = [];
-            var current = goal;
+            var current = goal.clone();
             path.push(goal);
-            while (!current["equals"](start)) {
-                current = cameFrom.get(current);
+            while (current && !current.equals(start)) {
+                current = cameFrom.get(current.x + "_" + current.y);
                 path.push(current);
             }
             path.reverse();
@@ -102,7 +109,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._height;
         };
         AstarGridGraph.prototype.isNodePassable = function (node) {
-            return !this.walls.firstOrDefault(function (wall) { return wall.equals(node); });
+            return !new linq.List(this.walls).firstOrDefault(function (wall) { return wall.equals(node); });
         };
         AstarGridGraph.prototype.search = function (start, goal) {
             return ai.AStarPathfinder.search(this, start, goal);
@@ -284,7 +291,7 @@ var ai;
             var foundPath = false;
             var frontier = [];
             frontier.unshift(start);
-            cameFrom.set(start, start);
+            cameFrom.set(start.x + "_" + start.y, start);
             var _loop_2 = function () {
                 var current = frontier.shift();
                 if (current.equals(goal)) {
@@ -292,9 +299,9 @@ var ai;
                     return "break";
                 }
                 graph.getNeighbors(current).forEach(function (next) {
-                    if (!cameFrom.has(next)) {
+                    if (!cameFrom.has(start.x + "_" + start.y)) {
                         frontier.unshift(next);
-                        cameFrom.set(next, current);
+                        cameFrom.set(start.x + "_" + start.y, current);
                     }
                 });
             };
@@ -346,7 +353,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._hegiht;
         };
         UnweightedGridGraph.prototype.isNodePassable = function (node) {
-            return !this.walls.firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
+            return !new linq.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
         };
         UnweightedGridGraph.prototype.getNeighbors = function (node) {
             var _this = this;
@@ -399,7 +406,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._height;
         };
         WeightedGridGraph.prototype.isNodePassable = function (node) {
-            return !this.walls.firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
+            return !new linq.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
         };
         WeightedGridGraph.prototype.search = function (start, goal) {
             return ai.WeightedPathfinder.search(this, start, goal);
@@ -455,24 +462,26 @@ var ai;
         WeightedPathfinder.search = function (graph, start, goal, cameFrom) {
             if (cameFrom === void 0) { cameFrom = new Map(); }
             var foundPath = false;
-            cameFrom.set(start, start);
+            var startKey = start.x + "_" + start.y;
+            cameFrom.set(startKey, start);
             var costSoFar = new Map();
             var frontier = new ai.PriorityQueue(1000);
             frontier.enqueue(new WeightedNode(start), 0);
-            costSoFar.set(start, 0);
+            costSoFar.set(startKey, 0);
             var _loop_3 = function () {
                 var current = frontier.dequeue();
-                if (current.data["equals"](goal)) {
+                if (current.data.equals(goal)) {
                     foundPath = true;
                     return "break";
                 }
                 graph.getNeighbors(current.data).forEach(function (next) {
-                    var newCost = costSoFar.get(current.data) + graph.cost(current.data, next);
-                    if (!costSoFar.has(next) || newCost < costSoFar.get(next)) {
-                        costSoFar.set(next, newCost);
+                    var newCost = costSoFar.get(current.data.x + "_" + current.data.y) + graph.cost(current.data, next);
+                    var nextKey = next.x + "_" + next.y;
+                    if (!costSoFar.has(nextKey) || newCost < costSoFar.get(nextKey)) {
+                        costSoFar.set(nextKey, newCost);
                         var priprity = newCost;
                         frontier.enqueue(new WeightedNode(next), priprity);
-                        cameFrom.set(next, current.data);
+                        cameFrom.set(next.x + "_" + next.y, current.data);
                     }
                 });
             };
@@ -483,12 +492,17 @@ var ai;
             }
             return foundPath;
         };
+        WeightedPathfinder.searchR = function (graph, start, goal) {
+            var cameFrom = new Map();
+            var foundPath = this.search(graph, start, goal, cameFrom);
+            return foundPath ? this.recontructPath(cameFrom, start, goal) : null;
+        };
         WeightedPathfinder.recontructPath = function (cameFrom, start, goal) {
             var path = [];
             var current = goal;
             path.push(goal);
-            while (!current["equals"](start)) {
-                current = cameFrom.get(current);
+            while (current && !current.equals(start)) {
+                current = cameFrom.get(current.x + "_" + current.y);
                 path.push(current);
             }
             path.reverse();
