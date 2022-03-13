@@ -109,7 +109,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._height;
         };
         AstarGridGraph.prototype.isNodePassable = function (node) {
-            return !new linq.List(this.walls).firstOrDefault(function (wall) { return wall.equals(node); });
+            return !new es.List(this.walls).firstOrDefault(function (wall) { return wall.equals(node); });
         };
         AstarGridGraph.prototype.search = function (start, goal) {
             return ai.AStarPathfinder.search(this, start, goal);
@@ -353,7 +353,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._hegiht;
         };
         UnweightedGridGraph.prototype.isNodePassable = function (node) {
-            return !new linq.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
+            return !new es.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
         };
         UnweightedGridGraph.prototype.getNeighbors = function (node) {
             var _this = this;
@@ -406,7 +406,7 @@ var ai;
             return 0 <= node.x && node.x < this._width && 0 <= node.y && node.y < this._height;
         };
         WeightedGridGraph.prototype.isNodePassable = function (node) {
-            return !new linq.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
+            return !new es.List(this.walls).firstOrDefault(function (wall) { return JSON.stringify(wall) == JSON.stringify(node); });
         };
         WeightedGridGraph.prototype.search = function (start, goal) {
             return ai.WeightedPathfinder.search(this, start, goal);
@@ -521,11 +521,11 @@ var ai;
         }
         AStarStorage.prototype.clear = function () {
             for (var i = 0; i < this._numOpened; i++) {
-                es.Pool.free(this._opened[i]);
+                es.Pool.free(ai.AStarNode, this._opened[i]);
                 this._opened[i] = null;
             }
             for (var i = 0; i < this._numClosed; i++) {
-                es.Pool.free(this._closed[i]);
+                es.Pool.free(ai.AStarNode, this._closed[i]);
                 this._closed[i] = null;
             }
             this._numOpened = this._numClosed = 0;
@@ -679,7 +679,7 @@ var ai;
                         this.storage.addToOpenList(nb);
                     }
                 }
-                es.ListPool.free(neighbors);
+                es.ListPool.free(AStarNode, neighbors);
             }
         };
         AStar.reconstructPlan = function (goalNode, selectedNodes) {
@@ -784,7 +784,7 @@ var ai;
             return ai.AStar.plan(this, startState, goalState, selectedNode);
         };
         ActionPlanner.prototype.getPossibleTransitions = function (fr) {
-            var result = es.ListPool.obtain();
+            var result = es.ListPool.obtain(ai.AStarNode);
             for (var i = 0; i < this._viableActions.length; ++i) {
                 var pre = this._preConditions[i];
                 var care = (pre.dontCare ^ -1);
@@ -850,7 +850,7 @@ var ai;
                 console.log("               start" + "\t" + this.getWorldState().describe(this._planner));
                 for (var i = 0; i < nodes.length; i++) {
                     console.log(i + ": " + nodes[i].action.name + "\t" + nodes[i].worldState.describe(this._planner));
-                    es.Pool.free(nodes[i]);
+                    es.Pool.free(ai.AStarNode, nodes[i]);
                 }
             }
             return this.hasActionPlan();

@@ -23,7 +23,7 @@ module ai {
                 console.log(`${"               start"}\t${this.getWorldState().describe(this._planner)}`);
                 for (let i = 0; i < nodes.length; i++){
                     console.log(`${i}: ${nodes[i].action.name}\t${nodes[i].worldState.describe(this._planner)}`);
-                    es.Pool.free<AStarNode>(nodes[i]);
+                    es.Pool.free<AStarNode>(AStarNode, nodes[i]);
                 }
             }
 

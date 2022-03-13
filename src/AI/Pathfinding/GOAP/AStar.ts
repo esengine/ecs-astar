@@ -152,7 +152,7 @@ module ai {
                     }
                 }
 
-                es.ListPool.free<AStarNode>(neighbors);
+                es.ListPool.free<AStarNode>(AStarNode, neighbors);
             }
         }
 

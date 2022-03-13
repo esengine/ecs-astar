@@ -74,7 +74,7 @@ module ai {
         }
 
         public getPossibleTransitions(fr: WorldState){
-            let result = es.ListPool.obtain<AStarNode>();
+            let result = es.ListPool.obtain<AStarNode>(AStarNode);
             for (let i = 0; i < this._viableActions.length; ++i){
                 let pre = this._preConditions[i];
                 let care = (pre.dontCare ^ -1);

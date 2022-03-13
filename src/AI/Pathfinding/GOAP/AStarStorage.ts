@@ -17,12 +17,12 @@ module ai {
 
         public clear(){
             for (let i = 0; i < this._numOpened; i ++){
-                es.Pool.free<AStarNode>(this._opened[i]);
+                es.Pool.free<AStarNode>(AStarNode, this._opened[i]);
                 this._opened[i] = null;
             }
 
             for (let i = 0; i < this._numClosed; i ++){
-                es.Pool.free<AStarNode>(this._closed[i]);
+                es.Pool.free<AStarNode>(AStarNode, this._closed[i]);
                 this._closed[i] = null;
             }
 

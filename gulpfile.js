@@ -8,8 +8,8 @@ const tsProject = ts.createProject('tsconfig.json');
 gulp.task('buildJs', () => {
     return tsProject.src()
         .pipe(tsProject())
-        .js.pipe(inject.replace('var es;', ''))
-        .pipe(inject.prepend('window.es = {};\n'))
+        .js.pipe(inject.replace('var ai;', ''))
+        .pipe(inject.prepend('window.ai = {};\n'))
         .pipe(inject.replace('var __extends =', 'window.__extends ='))
         .pipe(minify({ext: {min: ".min.js"}}))
         .pipe(gulp.dest('./bin'));

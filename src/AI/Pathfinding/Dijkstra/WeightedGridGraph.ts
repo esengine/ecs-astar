@@ -42,7 +42,7 @@ module ai {
         }
 
         public isNodePassable(node: es.Vector2): boolean {
-            return !new linq.List(this.walls).firstOrDefault(wall => JSON.stringify(wall) == JSON.stringify(node));
+            return !new es.List(this.walls).firstOrDefault(wall => JSON.stringify(wall) == JSON.stringify(node));
         }
 
         public search(start: es.Vector2, goal: es.Vector2) {
