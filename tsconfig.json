@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "system",
+    "emitDecoratorMetadata": true,
+    "module": "es6",
     "target": "es5",
     "declaration": true,
     "sourceMap": false,
     "removeComments": true,
-    "outFile": "./astar.js",
+    "outDir": "./bin",
+    "strict": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "es5",
       "dom",
@@ -15,8 +22,11 @@
     ]
   },
   "include": [
-    "src",
-    "lib"
+    "src/index.ts",
+    "src/Types/**/*",
+    "src/Utils/**/*",
+    "src/AI/Pathfinding/AStar/**/*",
+    "src/AI/Pathfinding/BreadthFirst/**/*"
   ],
   "exclude": [
     "node_modules"

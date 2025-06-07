@@ -45,7 +45,9 @@
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^4.0.0"
   },
-
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/359807859@qq.com"
+  },
   "dependencies": {
     "@esengine/ecs-framework": "^2.0.5"
   }
