@@ -2,8 +2,14 @@
   "name": "@esengine/pathfinding",
   "version": "1.0.1",
   "description": "寻路算法库，支持A*、广度优先等算法，适用于Cocos Creator、Laya等游戏引擎",
-  "main": "bin/index.js",
-  "types": "bin/index.d.ts",
+  "main": "dist/pathfinding.cjs",
+  "module": "dist/pathfinding.mjs",
+  "types": "dist/pathfinding.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "pathfinding",
     "astar",
@@ -22,28 +28,24 @@
   "scripts": {
     "test": "mocha --recursive --reporter tap --growl",
     "eslint": "eslint src --ext .ts",
-    "build": "gulp build",
-    "dev": "gulp buildJs"
+    "clean": "rimraf bin dist",
+    "build:ts": "tsc",
+    "prebuild": "npm run clean",
+    "build": "npm run build:ts && rollup -c",
+    "build:watch": "tsc --watch",
+    "rebuild": "npm run clean && npm run build",
+    "dev": "npm run build:ts && rollup -c --watch"
   },
   "author": "yhh",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "@babel/preset-env": "^7.23.0",
-    "browserify": "^17.0.0",
-    "del": "^8.0.0",
-    "gulp": "^5.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-inject-string": "^1.1.2",
-    "gulp-string-replace": "^1.1.2",
-    "gulp-terser": "^2.1.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "tsify": "^5.0.4",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "rimraf": "^5.0.0",
+    "rollup": "^4.42.0",
+    "rollup-plugin-dts": "^6.2.1",
     "typedoc": "^0.25.0",
-    "typescript": "^4.9.5",
-    "vinyl-source-stream": "^2.0.0",
-    "watchify": "^4.0.0"
+    "typescript": "^5.8.3"
   },
 
   "dependencies": {
