@@ -34,7 +34,8 @@
     "build": "npm run build:ts && rollup -c",
     "build:watch": "tsc --watch",
     "rebuild": "npm run clean && npm run build",
-    "dev": "npm run build:ts && rollup -c --watch"
+    "dev": "npm run build:ts && rollup -c --watch",
+    "publish:patch": "npm version patch && npm run build && npm publish"
   },
   "author": "yhh",
   "license": "MIT",
