@@ -37,9 +37,6 @@ pids
 *.seed
 *.pid.lock
 
-# Build tools
-rollup.config.js
-
 # Package files
 *.tgz
 *.tar.gz
