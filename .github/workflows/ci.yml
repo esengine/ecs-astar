@@ -1,0 +1,49 @@
+# A*路径查找算法 - 持续集成
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 测试和构建
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: 安装依赖
+      run: npm ci --legacy-peer-deps
+
+    - name: 类型检查
+      run: npm run type-check
+
+    - name: 运行测试
+      run: npm test
+
+    - name: 测试覆盖率
+      run: npm run test:coverage
+
+    - name: 构建项目
+      run: npm run build
+
+    - name: 验证构建产物
+      run: |
+        test -f dist/pathfinding.js
+        test -f dist/pathfinding.mjs
+        test -f dist/pathfinding.cjs
+        test -f dist/pathfinding.d.ts
+        echo "✅ 构建产物验证通过"
+
+

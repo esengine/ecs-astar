@@ -27,4 +27,11 @@ export interface IAstarGraph<T extends IVector2> {
      * @returns 启发式成本
      */
     heuristic(node: T, goal: T): number;
+
+    /**
+     * 检查节点是否可通行
+     * @param node 要检查的节点
+     * @returns 如果节点可通行返回true，否则返回false
+     */
+    isNodePassable(node: T): boolean;
 }
