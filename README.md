@@ -2,7 +2,7 @@
 
 [![CI](https://img.shields.io/badge/CI-passing-brightgreen)](https://github.com/esengine/ecs-astar/actions)
 [![npm版本](https://img.shields.io/npm/v/@esengine/pathfinding.svg)](https://www.npmjs.com/package/@esengine/pathfinding)
-[![测试覆盖率](https://img.shields.io/badge/coverage-82.98%25-green)](https://github.com/esengine/ecs-astar)
+[![测试覆盖率](https://img.shields.io/badge/coverage-87.39%25-green)](https://github.com/esengine/ecs-astar)
 [![许可证](https://img.shields.io/npm/l/@esengine/pathfinding.svg)](https://github.com/esengine/ecs-astar/blob/main/LICENSE)
 
 适用于Cocos Creator和Laya引擎的寻路算法库，支持A*和广度优先搜索算法。

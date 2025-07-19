@@ -58,8 +58,8 @@
     "rimraf": "^5.0.0",
     "rollup": "^4.42.0",
     "rollup-plugin-dts": "^6.2.1",
-    "typedoc": "^0.25.0",
-    "typescript": "^5.8.3"
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@esengine/ecs-framework": "^2.0.5"

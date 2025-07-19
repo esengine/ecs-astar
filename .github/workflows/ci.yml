@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
 
     - name: 安装依赖
-      run: npm ci
+      run: npm ci --legacy-peer-deps
 
     - name: 类型检查
       run: npm run type-check
