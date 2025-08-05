@@ -1,6 +1,6 @@
 {
   "name": "@esengine/pathfinding",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "寻路算法库，支持A*、广度优先等算法，适用于Cocos Creator、Laya等游戏引擎",
   "main": "dist/pathfinding.cjs",
   "module": "dist/pathfinding.mjs",
