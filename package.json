@@ -5,6 +5,12 @@
   "main": "dist/pathfinding.cjs",
   "module": "dist/pathfinding.mjs",
   "types": "dist/pathfinding.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/pathfinding.mjs",
+      "default": "./dist/pathfinding.cjs"
+    }
+  },
   "files": [
     "dist/**/*",
     "README.md",
