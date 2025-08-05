@@ -10,6 +10,10 @@ yarn-error.log*
 *.min.js
 *.d.ts
 
+# Test coverage
+/coverage/
+*.lcov
+
 # IDE and editor files
 /.idea/
 /.vscode/
