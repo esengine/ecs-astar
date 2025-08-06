@@ -66,8 +66,5 @@
     "rollup-plugin-dts": "^6.2.1",
     "typedoc": "^0.25.13",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@esengine/ecs-framework": "^2.0.5"
   }
 }

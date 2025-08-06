@@ -13,7 +13,7 @@ const banner = `/**
  * @license ${pkg.license}
  */`;
 
-const external = ['@esengine/ecs-framework'];
+const external = [];
 
 const commonPlugins = [
   resolve({
